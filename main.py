@@ -8,10 +8,6 @@ def parse_config():
     parser = argparse.ArgumentParser(description="RAF2JPEG")
     parser.add_argument('--input', '-i', type=str, required=True, help="input directory address") 
     parser.add_argument('--output', '-o', type=str, required=True, help="export directory address") 
-    # import_path = './img/'
-    # import_path = './img/'
-    # import_path = './img/'
-    # export_path = './img/output/'
     args = parser.parse_args()
     return args
 
