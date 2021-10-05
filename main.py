@@ -19,9 +19,9 @@ class RAFHeader:
             self.type_string = struct.unpack('>16s', f.read(16))[0]
             self.format_ver = struct.unpack('>4s', f.read(4))[0]
             self.camera_id = struct.unpack('>8s', f.read(8))[0]
-            self.camera_str = struct.unpack('>32s', f.read(32))[0].decode("utf_8")
+            self.camera_str = struct.unpack('>32s', f.read(32))[0].decode("utf_8","ignore")
             self.offset_ver = struct.unpack('>4s', f.read(4))[0]
-            self.offset_unk = struct.unpack('>20s', f.read(20))[0].decode("utf_8")
+            self.offset_unk = struct.unpack('>20s', f.read(20))[0].decode("utf_8","ignore")
             self.offset_jpg_offset = struct.unpack('>1i', f.read(4))[0]
             self.offset_jpg_length = struct.unpack('>1i', f.read(4))[0]
             self.offset_CFA_header_offset = struct.unpack('>1i', f.read(4))[0]
@@ -94,11 +94,22 @@ if __name__ == '__main__':
     if not os.path.exists(export_path):
         os.mkdir(export_path)
     file_lst = os.listdir(import_path)
+    res_string = ""
     for i, name in enumerate(file_lst):
         if name.split(".")[-1] == "RAF":
-            file_path = import_path + name
-            obj = RAF(file_path)
-            export_path = export_path + name.split(".")[0]
-            obj.export(export_path, 'jpg')
+            try:
+                file_path = import_path + name
+                obj = RAF(file_path)
+                export_file_path = export_path + name.split(".")[0]
+                obj.export(export_file_path, 'jpg')
+                print("success:", file_path)
+                res_string = res_string + "success:" + file_path + "\n"
+            except Exception as e:
+                print("fail:", file_path)
+                res_string = res_string + "fail:" + file_path + "\n"
+                print(e)
+
+    with open(export_path + "res.txt", "w+") as f:
+       f.write(res_string) 
     pass
 
